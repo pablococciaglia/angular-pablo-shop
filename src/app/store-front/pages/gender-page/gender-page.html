@@ -1,0 +1,14 @@
+<h1 style="font-family: Monserrat-alternates" class="mt-5 text-3xl font-bold">All products</h1>
+<h2 class="text-xl">
+  for <span style="font-family: Monserrat-alternates" class="text-secondary">{{ gender() }}</span>
+</h2>
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-2 gap-3">
+  @for (product of productResource.value()?.products; track product.id) {
+  <app-card [product]="product" />
+  }
+</div>
+<app-pagination
+  [pages]="productResource.value()?.pages ?? 0"
+  [currentPage]="paginationService.currentPage()"
+/>
