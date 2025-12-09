@@ -17,3 +17,11 @@ export enum FullName {
 export enum Role {
   Admin = 'admin',
 }
+
+export enum AuthStatus {
+  CHECKING = 'checking',
+  AUTHENTICATED = 'authenticated',
+  NOT_AUTHENTICATED = 'not-authenticated',
+}
+
+export const passwordRegex = '^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,}$';
