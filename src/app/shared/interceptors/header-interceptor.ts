@@ -8,8 +8,6 @@ export const headerInterceptor: HttpInterceptorFn = (req, next) => {
   const reqWithHeader = req.clone({
     headers: req.headers.set('Authorization', `Bearer ${token}`),
   });
-  if (req.url.includes('/auth/check-status')) {
-    return next(reqWithHeader);
-  }
-  return next(req);
+
+  return next(reqWithHeader);
 };

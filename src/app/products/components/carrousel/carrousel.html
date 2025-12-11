@@ -6,6 +6,10 @@
     <div class="swiper-slide">
       <img [src]="img | productImg" alt="sport product" />
     </div>
+    } @empty {
+    <div class="swiper-slide">
+      <img [src]="null | productImg" alt="sport product" />
+    </div>
     }
   </div>
   <!-- If we need pagination -->

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthStatus } from '@auth/interfaces/auth.interface';
 import { AuthService } from '@auth/services/auth.service';

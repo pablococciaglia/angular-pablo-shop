@@ -58,6 +58,11 @@
   <div class="navbar-end">
     @if(authService.authStatus() === authStatus.AUTHENTICATED) {
     <button class="btn btn-ghost">{{ authService.user()?.fullName }}</button>
+    @if (authService.isAdmin()){
+    <a class="btn text-accent" routerLink="/admin">
+      <span class="">Admin</span>
+    </a>
+    }
     <button class="btn btn-secondary" (click)="logout()">Logout</button>
     } @else if (authService.authStatus() === authStatus.CHECKING) {
     <button class="btn btn-secondary">

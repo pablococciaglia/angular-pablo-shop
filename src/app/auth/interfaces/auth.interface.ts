@@ -16,6 +16,7 @@ export enum FullName {
 
 export enum Role {
   Admin = 'admin',
+  User = 'user',
 }
 
 export enum AuthStatus {
