@@ -1,5 +1,5 @@
-import { Component, inject, input, OnInit, signal } from '@angular/core';
-import { Gender, Product, Tag } from '@products/interfaces/product.interface';
+import { Component, computed, inject, input, OnInit, signal } from '@angular/core';
+import { Gender, Product } from '@products/interfaces/product.interface';
 import { Carrousel } from '@products/components/carrousel/carrousel';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormUtils } from '@shared/utils/form-utils';
@@ -15,10 +15,18 @@ import { Router } from '@angular/router';
 export class ProductDetails implements OnInit {
   gender = Gender;
   product = input.required<Product>();
+
+  imgFileList: FileList | undefined = undefined;
   fb = inject(FormBuilder);
   router = inject(Router);
   productService = inject(ProductService);
+
   wasSaved = signal(false);
+  tempImages = signal<string[]>([]);
+  imagesForCarrousel = computed(() => {
+    return [...this.product().images, ...this.tempImages()];
+  });
+
   productForm = this.fb.group({
     title: ['', Validators.required],
     description: ['', Validators.required],
@@ -28,7 +36,7 @@ export class ProductDetails implements OnInit {
     sizes: [['']],
     images: [[]],
     tags: [''],
-    gender: [this.gender.Men, [Validators.required, Validators.pattern(/gender|women|kid|unisex/)]],
+    gender: [this.gender.Men, [Validators.required, Validators.pattern(/men|women|kid|unisex/)]],
   });
   sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
   ngOnInit(): void {
@@ -55,6 +63,7 @@ export class ProductDetails implements OnInit {
   submit() {
     this.productForm.markAllAsTouched();
     const isValid = this.productForm.valid;
+    console.log(this.productForm.controls['gender'].errors);
     if (!isValid) return;
     const productForm = this.productForm.value;
     const productLike: Partial<Product> = {
@@ -67,7 +76,7 @@ export class ProductDetails implements OnInit {
     };
 
     if (this.product().id === 'new') {
-      this.productService.createProduct(productLike).subscribe((product) => {
+      this.productService.createProduct(productLike, this.imgFileList).subscribe((product) => {
         this.wasSaved.set(true);
         setTimeout(() => {
           this.wasSaved.set(false);
@@ -75,12 +84,20 @@ export class ProductDetails implements OnInit {
         }, 3000);
       });
     } else {
-      this.productService.updateProductById(this.product().id, productLike).subscribe((product) => {
-        this.wasSaved.set(true);
-        setTimeout(() => {
-          this.wasSaved.set(false);
-        }, 3000);
-      });
+      this.productService
+        .updateProductById(this.product().id, productLike, this.imgFileList)
+        .subscribe((product) => {
+          this.wasSaved.set(true);
+          setTimeout(() => {
+            this.wasSaved.set(false);
+          }, 3000);
+        });
     }
+  }
+
+  onFilesChanged({ files }: HTMLInputElement) {
+    const imageUrls = Array.from(files ?? []).map((file) => URL.createObjectURL(file));
+    this.imgFileList = files ?? undefined;
+    this.tempImages.set(imageUrls);
   }
 }

@@ -32,22 +32,28 @@
     <h2 class="text-lg font-bold">Sales data</h2>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-      <input
-        type="number"
-        formControlName="price"
-        placeholder="Precio"
-        class="input input-bordered w-full"
-        [class.border-red-500]="productForm.get('price')?.errors ?? false"
-      />
+      <label for="price"
+        >Price
+        <input
+          id="price"
+          type="number"
+          formControlName="price"
+          placeholder="Precio"
+          class="input input-bordered w-full"
+          [class.border-red-500]="productForm.get('price')?.errors ?? false"
+      /></label>
       <form-error-label [control]="productForm.get('price')!" />
 
-      <input
-        type="number"
-        formControlName="stock"
-        placeholder="Inventario"
-        class="input input-bordered w-full"
-        [class.border-red-500]="productForm.get('stock')?.errors ?? false"
-      />
+      <label for="stock"
+        >Stock
+        <input
+          id="stock"
+          type="number"
+          formControlName="stock"
+          placeholder="Inventario"
+          class="input input-bordered w-full"
+          [class.border-red-500]="productForm.get('stock')?.errors ?? false"
+      /></label>
       <form-error-label [control]="productForm.get('stock')!" />
     </div>
 
@@ -131,9 +137,26 @@
       </button>
     </div>
 
-    <app-carrousel [images]="product().images" />
+    <app-carrousel [images]="imagesForCarrousel()" />
 
-    <input type="file" class="file-input file-input-bordered w-full mt-4" />
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-2">
+      @for (image of tempImages(); track image) {
+      <img
+        class="w-full object-cover rounded-xl"
+        [src]="image"
+        alt="preview img before upload it"
+      />
+      }
+    </div>
+
+    <input
+      accept="image/*"
+      type="file"
+      multiple
+      class="file-input file-input-bordered w-full mt-4"
+      (change)="onFilesChanged(imgUploader)"
+      #imgUploader
+    />
   </div>
 </form>
 @if (wasSaved()){
